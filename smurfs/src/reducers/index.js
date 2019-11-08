@@ -4,7 +4,8 @@ const initialState = {
         name: '',
         age: '',
         height: '',
-    }
+    },
+    editing: '',
 }
 
 function reducer(state = initialState, action) {
@@ -39,9 +40,20 @@ function reducer(state = initialState, action) {
                     height: action.payload,
                 },
             };
-        case "POST_SMURF":
+        case "RESET_FORM":
             return {
-                ...state
+                ...state,
+                formSmurf: {
+                    name: '',
+                    age: '',
+                    height: '',
+                },
+                editing: '',
+            }
+        case "EDIT_MODE":
+            return {
+                ...state,
+                editing: action.payload,
             }
         default:
             return state;

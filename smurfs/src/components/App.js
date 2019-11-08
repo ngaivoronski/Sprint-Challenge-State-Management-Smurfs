@@ -38,14 +38,26 @@ function App(props) {
 
   const submitForm = event => {
     event.preventDefault();
-    console.log(props.formSmurf);
-    axios.post('http://localhost:3333/smurfs', props.formSmurf)
-    .then(function (response) {
-      updateSmurfs(response.data);
-    })
-    .catch(error => {
-      console.log("there was a POST error", error)
-    });
+    if (props.editing === '') {
+      axios.post('http://localhost:3333/smurfs', props.formSmurf)
+      .then(function (response) {
+        updateSmurfs(response.data);
+      })
+      .catch(error => {
+        console.log("there was a POST error", error)
+      });
+      dispatch({ type: "RESET_FORM"});
+    } else {
+      axios.put(`http://localhost:3333/smurfs/${props.editing}`, props.formSmurf)
+      .then(function (response) {
+        updateSmurfs(response.data);
+      })
+      .catch(error => {
+        console.log("there was a POST error", error)
+      });
+      dispatch({ type: "RESET_FORM"});
+    }
+    
   };
 
   const deleteSmurf = smurf => {
@@ -56,7 +68,21 @@ function App(props) {
     .catch(error => {
       console.log("there was a DELETE error", error)
     })
+    dispatch({ type: "RESET_FORM"});
   }
+
+  const editSmurf = smurf => {
+    console.log(smurf);
+    dispatch({ type: "FORM_SMURF_NAME_CHANGE", payload: smurf.name});
+    dispatch({ type: "FORM_SMURF_AGE_CHANGE", payload: smurf.age});
+    dispatch({ type: "FORM_SMURF_HEIGHT_CHANGE", payload: smurf.height});
+    dispatch({ type: "EDIT_MODE", payload: smurf.id});
+    console.log(props.editing);
+  }
+
+  useEffect(() => {
+    console.log("editing:", props.editing);
+  },)
 
   return (
     <div className="App">
@@ -72,7 +98,7 @@ function App(props) {
         <label htmlFor="height">Smurf Height:</label>
         <input name="height" type="text" value={props.formSmurf.height} onChange={formSmurfHeight}></input>
 
-        <button type="submit">Add Smurf</button>
+        <button type="submit">{props.editing ? 'Edit Smurf' : 'Add Smurf'}</button>
 
       </form>
 
@@ -82,6 +108,7 @@ function App(props) {
             <h2>{smurf.name}</h2>
             <p>Age: {smurf.age}</p>
             <p>Height: {smurf.height}</p>
+            <button onClick={() => editSmurf(smurf)}>Edit</button>
             <button onClick={() => deleteSmurf(smurf)}>Delete</button>
           </div>
         ))}
@@ -93,6 +120,7 @@ function App(props) {
 const mapStateToProps = state => ({
   smurfs: state.smurfs,
   formSmurf: state.formSmurf,
+  editing: state.editing,
 });
 
 export default connect(
