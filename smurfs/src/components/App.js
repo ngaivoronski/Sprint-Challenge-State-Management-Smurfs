@@ -1,16 +1,48 @@
-import React, { Component } from "react";
+import React, {useEffect} from 'react';
+import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
+import axios from 'axios';
 import "./App.css";
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <h1>SMURFS! 2.0 W/ Redux</h1>
-        <div>Welcome to your state management version of Smurfs!</div>
-        <div>Start inside of your `src/index.js` file!</div>
-        <div>Have fun!</div>
-      </div>
-    );
+
+function App(props) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    axios
+    .get('http://localhost:3333/smurfs')
+    .then(response => {
+      console.log(response.data);
+      updateSmurfs(response.data);
+    })
+    .catch(error => {
+      console.log("there was an error", error)
+    })
+  },[])
+
+  const updateSmurfs = smurflist => {
+    dispatch({ type: "SMURF_UPDATE", payload: smurflist});
   }
+
+  return (
+    <div className="App">
+      <h1>Smurf Village</h1>
+      <div className="smurf-list">
+        {props.smurfs.map(smurf => (
+          <div key={smurf.id}>
+            <h2>{smurf.name}</h2>
+            <p>Age: {smurf.age}</p>
+            <p>Height: {smurf.height}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  smurfs: state.smurfs,
+});
+
+export default connect(
+  mapStateToProps,
+)(App);
