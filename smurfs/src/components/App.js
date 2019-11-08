@@ -48,6 +48,16 @@ function App(props) {
     });
   };
 
+  const deleteSmurf = smurf => {
+    axios.delete(`http://localhost:3333/smurfs/${smurf.id}`)
+    .then(response => {
+      updateSmurfs(response.data);
+    })
+    .catch(error => {
+      console.log("there was a DELETE error", error)
+    })
+  }
+
   return (
     <div className="App">
       <h1>Smurf Village</h1>
@@ -72,6 +82,7 @@ function App(props) {
             <h2>{smurf.name}</h2>
             <p>Age: {smurf.age}</p>
             <p>Height: {smurf.height}</p>
+            <button onClick={() => deleteSmurf(smurf)}>Delete</button>
           </div>
         ))}
       </div>
