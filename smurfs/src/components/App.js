@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import { useDispatch } from 'react-redux';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import "./App.css";
+import "./App.scss";
 
 function App(props) {
   const dispatch = useDispatch();
@@ -88,23 +88,33 @@ function App(props) {
     <div className="App">
       <h1>Smurf Village</h1>
 
-      <form onSubmit={submitForm}>
-        <label htmlFor="name">Smurf Name:</label>
-        <input name="name" type="text" value={props.formSmurf.name} onChange={formSmurfName}></input>
+      <form onSubmit={submitForm} className="smurf-form">
 
-        <label htmlFor="age">Smurf Age:</label>
-        <input name="age" type="text" value={props.formSmurf.age} onChange={formSmurfAge}></input>
+        <h2>Welcome! Please populate our village with Smurfs!</h2>
 
-        <label htmlFor="height">Smurf Height:</label>
-        <input name="height" type="text" value={props.formSmurf.height} onChange={formSmurfHeight}></input>
+        <div className="input-div">
+          <label htmlFor="name">Smurf Name:</label>
+          <input name="name" type="text" value={props.formSmurf.name} onChange={formSmurfName}></input>
+        </div>
 
-        <button type="submit">{props.editing ? 'Edit Smurf' : 'Add Smurf'}</button>
+        <div className="input-div">
+          <label htmlFor="age">Smurf Age:</label>
+          <input name="age" type="text" value={props.formSmurf.age} onChange={formSmurfAge}></input>
+        </div>
+        
+
+        <div className="input-div">
+          <label htmlFor="height">Smurf Height:</label>
+          <input name="height" type="text" value={props.formSmurf.height} onChange={formSmurfHeight}></input>
+        </div>
+
+        <button type="submit">{props.editing === '' ? 'Add Smurf' : 'Edit Smurf'}</button>
 
       </form>
 
       <div className="smurf-list">
         {props.smurfs.map(smurf => (
-          <div key={smurf.id}>
+          <div key={smurf.id} className="smurf-card">
             <h2>{smurf.name}</h2>
             <p>Age: {smurf.age}</p>
             <p>Height: {smurf.height}</p>
