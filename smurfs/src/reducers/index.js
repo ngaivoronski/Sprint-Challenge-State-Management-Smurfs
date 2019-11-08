@@ -1,5 +1,10 @@
 const initialState = {
     smurfs: [],
+    formSmurf: {
+        name: '',
+        age: '',
+        height: '',
+    }
 }
 
 function reducer(state = initialState, action) {
@@ -10,6 +15,34 @@ function reducer(state = initialState, action) {
                 ...state,
                 smurfs: action.payload,
             };
+        case "FORM_SMURF_NAME_CHANGE":
+            return {
+                ...state,
+                formSmurf: {
+                    ...state.formSmurf,
+                    name: action.payload,
+                },
+            };
+        case "FORM_SMURF_AGE_CHANGE":
+            return {
+                ...state,
+                formSmurf: {
+                    ...state.formSmurf,
+                    age: action.payload,
+                },
+            };
+        case "FORM_SMURF_HEIGHT_CHANGE":
+            return {
+                ...state,
+                formSmurf: {
+                    ...state.formSmurf,
+                    height: action.payload,
+                },
+            };
+        case "POST_SMURF":
+            return {
+                ...state
+            }
         default:
             return state;
     }
